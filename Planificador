@@ -1,0 +1,507 @@
+
+package registroharrypotter;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+
+public class Planificador {
+    
+    Scanner sc= new Scanner(System.in);
+    static ArrayList<String> lista_materias = listaMaterias();
+    static ArrayList<String> lista_profesores = new ArrayList<>();
+    static ArrayList <Estudiante> lista_estudiantes= new ArrayList<>();
+    
+    
+    String usuario;
+    String contraseña;
+   
+    
+    static File FileCursos = new File ("Cursos.txt");
+    static File FileUsuarios = new File ("Usuarios.txt");
+    static File FileProfesores = new File ("Profesores.txt");
+    static File FileEstudiantes = new File ("Estudiantes.txt");
+    
+    
+    
+    public Planificador(String usuario, String contraseña) throws IOException {
+        
+        this.usuario = usuario;
+        this.contraseña = contraseña;
+        
+        
+    }
+    
+    public void ImprimirMenuPrincipal(){
+        System.out.println("/** MENU PRINCIPAL **/");
+        System.out.println("1. Crear curso");
+        System.out.println("2. Crear Profesor");
+        System.out.println("3. Crear Estudiante");
+        System.out.println("4. Ver horarios planificados");
+        System.out.println("5. Listado de estudiantes");
+    }
+    
+    
+    //Imprimir el listado de profesores registrados en el archivo y guardados en arrayList
+    public void ImprimirProfesores(){
+        String parte;
+        try{
+            FileReader leer = new FileReader(FileProfesores);
+            BufferedReader line = new BufferedReader(leer);
+            while (line.ready()){
+                String[] linea = line.readLine().split(",");
+                lista_profesores.add(linea[0] + " " + linea[1]);
+            }
+        }catch(IOException ex){ ex.printStackTrace();}
+        for (int x = 0; x < lista_profesores.size(); x++){
+            parte = lista_profesores.get(x);
+            System.out.println((x+1)+". "+parte);
+        }
+    }
+    
+    public static ArrayList<String> listaMaterias(){
+        ArrayList<String> lista_materias = new ArrayList<>();
+        lista_materias.add("Pociones");
+        lista_materias.add("Defensa contra las artes oscuras");
+        lista_materias.add("Adivinación");
+        lista_materias.add("Astronomía");
+        lista_materias.add("Historia de la Magia");
+        lista_materias.add("Herbología");
+        lista_materias.add("Encantamientos");
+        lista_materias.add("Vuelo");
+        return lista_materias;
+    }
+    
+    public static void ImprimirMaterias(ArrayList<String> lista_materias){
+        String m;
+        
+        for (int x = 0; x < lista_materias.size(); x++){
+            m = lista_materias.get(x);
+            System.out.println((x+1)+". "+m);
+        }
+    }
+    
+    
+    
+    public static Boolean VerificarDatosP(String usuario, String contraseña, 
+            Boolean result) throws IOException {
+
+        try {
+            FileReader leer = new FileReader("Usuarios.txt");
+            BufferedReader line = new BufferedReader(leer);
+            
+            Boolean first = true;
+            while (first) {
+                String confirm = null;
+                while (line.ready()) {
+                    String[] listLine = line.readLine().split(",");
+
+                    if (listLine[0].equals(usuario) && listLine[1].equals(contraseña)){
+                        
+                        confirm = "Yes";
+                    }
+                }
+                leer.close();
+                if ("Yes".equals(confirm)) {
+                    result = true;
+                    first = false;   
+                } else {
+                    result = false;
+                    
+                    first = false;
+                }
+            }
+            
+
+        } catch (IOException ex) {ex.printStackTrace();}
+        return result;
+    }
+
+    
+    public void CrearCurso() throws IOException{
+        String op_crear="";
+        int capacidad = 0;
+        String dia = "";
+        String horario = "";
+        String materia_ = "";
+        String profesor_ = "";
+        ArrayList<String> lista_materias = listaMaterias();
+        
+        while(!"S".equals(op_crear)){
+            int op_curso;
+            int op_profesor;
+            System.out.println("/** MATERIAS **/\n");
+            ImprimirMaterias(lista_materias); //aplicando método para imprimir materias
+            System.out.println("Elija una materia del listado de materias: ");
+            op_curso = sc.nextInt();
+            
+            while ((op_curso > 9) || (op_curso < 1)) {
+                System.out.println("Elija una materia valida del listado de materias: ");
+                op_curso = sc.nextInt();
+            }
+            
+            System.out.println("/** PROFESORES **/");
+            ImprimirProfesores(); //aplicando el método para imprimir los maestros
+            System.out.println("Elija un profesor del listado de profesores: ");
+            op_profesor = sc.nextInt();
+
+            while ((op_profesor < 1) || (op_profesor > lista_profesores.size())) {
+                System.out.println("Elija un profesor valido del listado de profesores: ");
+                op_profesor = sc.nextInt();
+            }
+            
+            System.out.println("Ingrese la capacidad del curso " + materia_ + ": ");
+            capacidad = sc.nextInt();
+            System.out.println("Ingrese el dia: ");
+            dia = sc.next();
+            System.out.println("Ingrese el horario del curso: ");
+            horario = sc.next();
+            
+            profesor_ = lista_profesores.get(op_profesor - 1);
+            materia_ = lista_materias.get(op_curso - 1);
+            
+            String nuevo_registro = materia_ + "," + profesor_ + "," + dia + "," + horario + "," + capacidad;
+            
+            try{
+                FileReader leer = new FileReader(FileCursos);
+                BufferedReader line = new BufferedReader(leer);
+                FileWriter escribir = new FileWriter(FileCursos,true);
+                BufferedWriter lineWrite = new BufferedWriter(escribir);
+                PrintWriter ecrit = new PrintWriter(lineWrite,true);
+                
+                String valid = "S";
+                
+                while (line.ready()){
+                    String[] linea = line.readLine().split(",");
+                    if (linea[0].equals(materia_)&& linea[2].equals(dia)&& linea[3].equals(horario)){
+                        valid = "N";
+                    }
+                }
+                
+                if ("S".equals(valid)){
+                    lineWrite.newLine();
+                    ecrit.write(nuevo_registro);
+                } else if ("N".equals(valid)){
+                    System.out.println("El curso ya existe, intente de nuevo ");
+                }
+                
+                lineWrite.close();
+                ecrit.close();
+                escribir.close();
+                leer.close();
+                
+            }catch(IOException e){e.printStackTrace();}
+            
+            
+            System.out.println("¿Desea guardar los datos? (S/N) ");
+            op_crear = sc.next().toUpperCase();
+        }
+    }
+    
+    public void CrearProfesor() throws IOException{
+        String op_crear="";
+        String aux = "";
+        String animal = "", pocion = "", deporte = "";
+        String nombre = "", apellido = "", varita = "", fecha_ingreso = "";
+        int edad = 0, tipo_mago = 0;
+        
+        try {
+            FileReader leer = new FileReader(FileProfesores);
+            FileWriter escribir = new FileWriter(FileProfesores,true);
+            BufferedReader br = new BufferedReader(leer);
+            BufferedWriter lineWrite = new BufferedWriter(escribir);
+            PrintWriter ecrit = new PrintWriter(lineWrite,true);
+
+            while (!"S".equals(op_crear)) {
+                
+                System.out.println("/** CREAR PROFESOR **/");
+                System.out.println("Ingrese Nombre: ");
+                nombre = sc.next();
+                System.out.println("Ingrese Apellido: ");
+                apellido = sc.next();
+                System.out.println("Ingrese Edad: ");
+                edad = sc.nextInt();
+                System.out.println("Varita: ");
+                varita = sc.next();
+                System.out.println("Fecha de Ingreso: ");
+                fecha_ingreso = sc.next();
+
+                System.out.println("Tipos de Magos/Brujas");
+                System.out.println("1.Animago");
+                System.out.println("2.Metamorfomago");
+                System.out.println("3.Estandar");
+                System.out.println("Elija el tipo de mago/bruja que es: ");
+                tipo_mago = sc.nextInt();
+
+                    if (tipo_mago == 1) {
+                 
+                        System.out.println("En que clase de animal puede convertirse: ");
+                        animal = sc.next();
+                        aux = nombre + "," + apellido + "," + edad + "," + varita + "," + fecha_ingreso + "," + "A" + "," + animal + "," + "hechizo1" + "," + "null" + "," + "null";
+                    }    
+                    if (tipo_mago == 2){
+                        System.out.println("Que pocion utiliza: ");
+                        pocion = sc.next();
+                        aux = nombre + "," + apellido + "," + edad + "," + varita + "," + fecha_ingreso + "," + "M" + "," + "null" + "," + "null" + "," + pocion + "," + "null";
+                    }    
+                    if (tipo_mago == 3){
+                        System.out.println("Deporte: ");
+                        deporte = sc.next();
+                        aux = nombre + "," + apellido + "," + edad + "," + varita + "," + fecha_ingreso + "," + "N" + "," + "null" + "," + "null" + "," + "null" + "," + deporte;
+                    }
+
+                System.out.println("Desea guardar los datos? S/N: ");
+                op_crear = sc.next().toUpperCase();
+            }
+
+            //Agregando los nombres de los profesores (sin repetir) a un array para poder imprimir
+            String nombre_completo = nombre + " " + apellido;
+            String bandera = "False";
+
+            for (int x = 0; x < lista_profesores.size(); x++) { //comprobando si el nombre ya existe en el array
+                if (lista_profesores.get(x).equals(nombre_completo)) {
+                    bandera = "True";
+                    System.out.println("Es un profesor nuevo");
+                }
+            }
+
+            if (bandera == "False") {
+                lista_profesores.add(nombre_completo);
+                System.out.println("Se agreagó el nombre completo a la lista");
+            }
+
+            
+            escribir.write("\n"+aux);
+            System.out.println("Sus datos se han guardado correctamente ");
+            
+            leer.close();
+            escribir.close();
+            lineWrite.close();
+            ecrit.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public void CrearEstudiante() throws IOException{
+        String op_crear="";
+        String aux="";
+        String animal = "", pocion = "", deporte = "";
+        String nombre = "", apellido = "", varita = "", casa = "", usuarioE = ""
+                , contraseñaE = "";
+        int edad = 0, tipo_mago = 0;
+        lista_estudiantes.add(new Estudiante("Hermione","Granger",16,"vid","Griffindor",3));
+        lista_estudiantes.add(new Estudiante("Harry","Potter",16,"acebo","Griffindor",4));
+        
+        try {
+            FileReader leer = new FileReader(FileEstudiantes);
+            FileWriter escribir = new FileWriter(FileEstudiantes,true);
+            FileWriter escribir2 = new FileWriter(FileUsuarios,true);
+            BufferedReader br = new BufferedReader(leer);
+            BufferedWriter lineWrite = new BufferedWriter(escribir);
+            BufferedWriter lineWrite2 = new BufferedWriter(escribir2);
+
+            while (!"S".equals(op_crear)) {
+                
+                System.out.println("/** CREAR ESTUDIANTE **/");
+                System.out.println("Ingrese Nombre: ");
+                nombre = sc.next();
+                System.out.println("Ingrese Apellido: ");
+                apellido = sc.next();
+                System.out.println("Ingrese Edad: ");
+                edad = sc.nextInt();
+                System.out.println("Varita: ");
+                varita = sc.next();
+                System.out.println("Casa: ");
+                casa = sc.next();
+                System.out.println("Usuario: ");
+                usuarioE = sc.next();
+                System.out.println("Contraseña: ");
+                contraseñaE = sc.next();
+
+                System.out.println("Tipos de Magos/Brujas");
+                System.out.println("1.Animago");
+                System.out.println("2.Metamorfomago");
+                System.out.println("3.Estandar");
+                System.out.println("Elija el tipo de mago/bruja que es: ");
+                tipo_mago = sc.nextInt();
+
+                if (tipo_mago == 1) {
+                 
+                    System.out.println("En que clase de animal puede convertirse: ");
+                    animal = sc.next();
+                    aux = nombre + "," + apellido + "," + edad + "," + varita + "," +casa + "," + "A";
+                }    
+                if (tipo_mago == 2){
+                    System.out.println("Que pocion utiliza: ");
+                    pocion = sc.next();
+                    aux = nombre + "," + apellido + "," + edad + "," + varita + "," + casa + "," + "M";
+                }    
+                if (tipo_mago == 3){
+                    System.out.println("Deporte: ");
+                    deporte = sc.next();
+                    aux = nombre + "," + apellido + "," + edad + "," + varita + "," + casa + "," + "N";
+                }
+
+                System.out.println("Desea guardar los datos? S/N: ");
+                op_crear = sc.next().toUpperCase();
+            }
+            
+            
+            
+            String bandera = "False";
+
+            for (int x = 0; x < lista_estudiantes.size(); x++) { //comprobando si el nombre ya existe en el array
+                if (lista_estudiantes.get(x).nombre.equals(nombre)) {
+                    bandera = "True";
+                }
+            }
+
+            if (bandera == "False") {
+                Estudiante est = new Estudiante(nombre, apellido, edad, casa, varita,0);
+                lista_estudiantes.add(est);
+            } else {
+                System.out.println("El estudiante ya se encuentra registrado");
+            }
+
+            lineWrite.newLine();
+            escribir.write(aux);
+            lineWrite2.newLine();
+            escribir2.write(usuarioE+","+contraseñaE+","+nombre+","+apellido+","+"estudiante");
+            System.out.println("Sus datos se han guardado correctamente ");
+            escribir.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public void VerHorariosPlanificados() throws IOException{
+        int op_listado;
+        String materias="";
+        
+        System.out.println("/** CURSOS PLANIFICADOS **/");
+        System.out.println("/** MATERIAS **/\n");
+        
+        ArrayList<String> lista_materias = listaMaterias();
+        ImprimirMaterias(lista_materias); //aplicación del método imprimir materias
+        System.out.println("Elija una materia del listado de materias: ");
+        op_listado=sc.nextInt();
+        
+        materias = lista_materias.get(op_listado-1); //buscando en el arrayList
+        
+        try{
+            FileReader leer= new FileReader(FileCursos);
+            BufferedReader line= new BufferedReader(leer);
+            
+            while(line.ready()){
+                String[] cursos=line.readLine().split(",");
+                
+                if(materias.equals(cursos[0])){
+                    System.out.println("MATERIA: "+cursos[0]);
+                    System.out.println("PROFESOR: "+cursos[1]);
+                    System.out.println("HORARIO: "+cursos[3]);
+                    System.out.println("REGISTRADOS: "+lista_estudiantes.size());
+                }
+            }
+        }
+        catch(IOException ex){
+         ex.printStackTrace();
+        } 
+    }
+    
+    public int ContarEstudiantes() throws FileNotFoundException, IOException{
+        FileReader reader=new FileReader("registro.txt");
+        BufferedReader br= new BufferedReader(reader);
+        int n=0,x;
+        String line="";
+        System.out.println("Ingrese la materia que quiere contar: ");
+        x=sc.nextInt();
+        String materia=lista_materias.get(x);
+        while(line!=null){
+            line=br.readLine();
+            if(materia.equals(line.split(",")[3])){
+                n=n+1;
+            }
+        }
+        return n;
+    }
+    
+    public void ListadoEstudiantes() throws FileNotFoundException, IOException{
+        int op_sort;
+        String line="";
+        
+        System.out.println("/** LISTADO DE ESTUDIANTES **/");
+        System.out.println("1. Edad\n2. Nombre\n3. Numero de materias registradas");
+        System.out.println("Eliga el criterio para ordenar: ");
+        op_sort=sc.nextInt();
+        System.out.println(lista_estudiantes);
+                
+        FileReader reader=new FileReader("registro.txt");
+        BufferedReader br= new BufferedReader(reader);
+        
+        for(Estudiante estudiante: lista_estudiantes){
+            int n=0;
+            while(null!=line){
+                line= br.readLine();
+                if (estudiante.apellido.equals(line.split(",")[2])){
+                    n=n+1;
+                    estudiante.setN_materias(n);    
+                }
+            }
+        }
+        
+        reader.close();
+        
+        
+        switch (op_sort) {
+            case 1:
+                Collections.sort(lista_estudiantes, (Estudiante a, Estudiante b) -> {
+                    int resultado = Integer.compare( a.edad, b.edad);
+                    if ( resultado != 0 ) { return resultado; }
+                    resultado = a.nombre.compareTo(b.nombre);
+                    if ( resultado != 0 ) { return resultado; }
+                    resultado = a.apellido.compareTo(b.apellido); 
+                    if ( resultado != 0 ) { return resultado; }
+                    return resultado;
+        });
+                
+            case 2:
+                Collections.sort(lista_estudiantes, (Estudiante a, Estudiante b) -> {
+                    int resultado = a.nombre.compareTo(b.nombre);
+                    if (resultado != 0 ) {
+                        return resultado;
+                    }
+                    resultado = a.apellido.compareTo(b.apellido);
+                    if (resultado != 0 ) {
+                        return resultado;
+                    } else {
+                        return a.apellido.compareTo(b.apellido);
+                    }
+        });               
+            case 3:
+                Collections.sort(lista_estudiantes, (Estudiante a, Estudiante b) -> {
+                    int resultado =Integer.compare( a.n_materias, b.n_materias);
+                    if (resultado != 0 ) {
+                        return resultado;
+                    }
+                    resultado = a.nombre.compareTo(b.nombre);
+                    if (resultado != 0 ) {
+                        return resultado;
+                    } else {
+                        return a.nombre.compareTo(b.nombre);
+                    }
+        });   
+        } 
+    }
+       
+}
