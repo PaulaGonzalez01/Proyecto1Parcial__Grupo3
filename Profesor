@@ -1,0 +1,29 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package registroharrypotter;
+
+/**
+ *
+ * @author delll
+ */
+public class Profesor extends Persona implements Volador {
+    
+    public Profesor(String nombre, String apellido, int edad, String casa, String varita) {
+        super(nombre, apellido, edad, casa, varita);
+    }
+
+    @Override
+    public void Volar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void Despegar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
+}
