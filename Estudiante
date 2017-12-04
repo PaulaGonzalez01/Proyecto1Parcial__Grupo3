@@ -1,0 +1,469 @@
+
+package registroharrypotter;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Scanner;
+
+
+
+public class Estudiante extends Persona implements Volador {
+    
+    public int n_materias;
+    ArrayList<String> lista_materias = Planificador.listaMaterias();
+
+    public Estudiante(String nombre, String apellido, int edad, String casa, String varita
+    , int n_materias) {
+        super(nombre, apellido, edad, casa, varita);
+        this.n_materias = n_materias;
+    }
+
+
+   
+    public int getN_materias() {
+        return n_materias;
+    }
+    public void setN_materias(int n_materias) {
+        this.n_materias = n_materias;
+    }
+
+    
+    
+    @Override
+    public void setNombre(String nombre) {        
+        this.nombre = nombre;
+    }
+
+    @Override
+    public String getApellido() {
+        return apellido;
+    }
+    @Override
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+    
+    @Override
+    public int getEdad() {
+        return edad;
+    }
+    @Override
+    public void setEdad(int edad) {
+        this.edad = edad;
+    }
+    
+    @Override
+    public String getCasa() {
+        return casa;
+    }
+    @Override
+    public void setCasa(String casa) {
+        this.casa = casa;
+    }
+    
+    @Override
+    public String getVarita() {
+        return varita;
+    }
+    @Override
+    public void setVarita(String varita) {
+        this.varita = varita;
+    }
+    
+    @Override
+    public String toString(){
+        String mensaje= getNombre()+"--"+getApellido()+"--"+getEdad()+"--"+getCasa()+"--"+getVarita();
+        return mensaje;
+    }
+    
+    //METODOS ESTATICOS PARA PODER CREAR EL OBJETO ESTUDIANTE EN EL MAIN
+    //INICIO
+    public static String NombreE(String usuario){
+        String nombre = "";
+        try {
+            FileReader leer = new FileReader(Planificador.FileUsuarios);
+            BufferedReader line = new BufferedReader(leer);
+            FileReader leer2 = new FileReader(Planificador.FileEstudiantes);
+            BufferedReader line2 = new BufferedReader(leer2);
+            String nombreE ="";
+            while(line.ready()){
+                String[] linea = line.readLine().split(",");
+                if (linea[0].equals(usuario)){
+                    nombreE = linea[2];
+                }
+            }
+            while(line2.ready()){
+                String[] linea2 = line2.readLine().split(",");
+                if (linea2[0].equals(nombreE)){
+                    nombre = linea2[0];
+                }
+            }
+        } catch(IOException e){ e.printStackTrace();}
+        return nombre;
+    }
+    
+    public static String ApellidoE(String usuario){
+        String apellido = "";
+        try {
+            FileReader leer = new FileReader(Planificador.FileUsuarios);
+            BufferedReader line = new BufferedReader(leer);
+            FileReader leer2 = new FileReader(Planificador.FileEstudiantes);
+            BufferedReader line2 = new BufferedReader(leer2);
+            String nombreE ="";
+            while(line.ready()){
+                String[] linea = line.readLine().split(",");
+                if (linea[0].equals(usuario)){
+                    nombreE = linea[2];
+                }
+            }
+            while(line2.ready()){
+                String[] linea2 = line2.readLine().split(",");
+                if (linea2[0].equals(nombreE)){
+                    apellido = linea2[1];
+                }
+            }
+        } catch(IOException e){ e.printStackTrace();}
+        return apellido;
+    }
+    
+    public static String EdadE(String usuario){
+        
+        String edad0= "";
+        try {
+            FileReader leer = new FileReader(Planificador.FileUsuarios);
+            BufferedReader line = new BufferedReader(leer);
+            FileReader leer2 = new FileReader(Planificador.FileEstudiantes);
+            BufferedReader line2 = new BufferedReader(leer2);
+            String nombreE ="";
+            while(line.ready()){
+                String[] linea = line.readLine().split(",");
+                if (linea[0].equals(usuario)){
+                    nombreE = linea[2];
+                }
+            }
+            while(line2.ready()){
+                String[] linea2 = line2.readLine().split(",");
+                if (linea2[0].equals(nombreE)){
+                    edad0 = linea2[2];
+                }
+            }
+            leer.close();
+            leer2.close();
+            line.close();
+            line2.close();
+        } catch(IOException e){ e.printStackTrace();}
+        
+        return edad0;
+    }
+    
+    public static String VaritaE(String usuario){
+        String varita = "";
+        try {
+            FileReader leer = new FileReader(Planificador.FileUsuarios);
+            BufferedReader line = new BufferedReader(leer);
+            FileReader leer2 = new FileReader(Planificador.FileEstudiantes);
+            BufferedReader line2 = new BufferedReader(leer2);
+            String nombreE ="";
+            while(line.ready()){
+                String[] linea = line.readLine().split(",");
+                if (linea[0].equals(usuario)){
+                    nombreE = linea[2];
+                }
+            }
+            while(line2.ready()){
+                String[] linea2 = line2.readLine().split(",");
+                if (linea2[0].equals(nombreE)){
+                    varita = linea2[3];
+                }
+            }
+        } catch(IOException e){ e.printStackTrace();}
+        return varita;
+    }
+    
+    public static String CasaE(String usuario){
+        String casa = "";
+        try {
+            FileReader leer = new FileReader(Planificador.FileUsuarios);
+            BufferedReader line = new BufferedReader(leer);
+            FileReader leer2 = new FileReader(Planificador.FileEstudiantes);
+            BufferedReader line2 = new BufferedReader(leer2);
+            String nombreE ="";
+            while(line.ready()){
+                String[] linea = line.readLine().split(",");
+                if (linea[0].equals(usuario)){
+                    nombreE = linea[2];
+                }
+            }
+            while(line2.ready()){
+                String[] linea2 = line2.readLine().split(",");
+                if (linea2[0].equals(nombreE)){
+                    casa = linea2[4];
+                }
+            }
+        } catch(IOException e){ e.printStackTrace();}
+        return casa;
+    }
+
+    public static String tipoE(String usuario){
+        String tipo = "";
+        try {
+            FileReader leer = new FileReader(Planificador.FileUsuarios);
+            BufferedReader line = new BufferedReader(leer);
+            FileReader leer2 = new FileReader(Planificador.FileEstudiantes);
+            BufferedReader line2 = new BufferedReader(leer2);
+            String nombreE ="";
+            while(line.ready()){
+                String[] linea = line.readLine().split(",");
+                if (linea[0].equals(usuario)){
+                    nombreE = linea[2];
+                }
+            }
+            while(line2.ready()){
+                String[] linea2 = line2.readLine().split(",");
+                if (linea2[0].equals(nombreE)){
+                    tipo = linea2[5];
+                }
+            }
+        } catch(IOException e){ e.printStackTrace();}
+        return tipo;
+    }
+    //FIN
+    
+    Scanner sc = new Scanner(System.in);
+    
+    public void VerCursosPlanificados() throws FileNotFoundException, IOException{
+       
+        String op_crear = "";
+        String vmateria = "";
+        String vprofesor = "";
+        String vdia = "";
+        String vhorario = "";
+        int opcurso;
+        String encontrado = "N";
+        ArrayList<String> lista_materia = Planificador.listaMaterias();
+        Scanner sc = new Scanner(System.in);
+        
+        System.out.println("/** CURSOS PLANIFICADOS **/\n");
+        Planificador.ImprimirMaterias(lista_materia);
+        System.out.println("Elija una materia del listado de materias: ");
+        opcurso =sc.nextInt();
+            
+        while((opcurso>9) || (opcurso<1)){ 
+            System.out.println("Elija una materia valida del listado de materias: ");
+            opcurso=sc.nextInt(); 
+        }
+            
+        vmateria = lista_materia.get(opcurso - 1);
+        
+        try{
+           FileReader leer = new FileReader (Planificador.FileCursos);
+           BufferedReader linea = new BufferedReader(leer);
+           
+           
+           while(linea.ready()){
+               String partes[]=linea.readLine().split(",");
+               
+               if (vmateria.equals(partes[0])){
+                   vprofesor = partes[1];
+                   vdia = partes[2];
+                   vhorario = partes[3];
+                   encontrado = "S";
+               }
+            }
+            leer.close();
+           
+        }catch(IOException e){
+            System.out.println("Error");
+        }
+        
+        if ("S".equals(encontrado)){
+            System.out.println("MATERIA: "+vmateria);
+            System.out.println("PROFESOR: "+vprofesor);
+            System.out.println("HORARIO: " +vdia+" de "+vhorario);
+        }else if ("N".equals(encontrado)){
+            System.out.println("No existe tal curso. ");
+        }
+    }
+        
+        //Lee el archivo de cursos planificados y presenta la informacion segun la opcion seleccionada
+        
+    public void Registro(String nombre, String apellido) throws IOException{
+        /*
+        se pide los dos parametros porque en esta parte ya ingresó el estudiante a dicha plataforma
+        entonces en este caso no se le pide su nombre y apellido para registrarse porque ya 
+        se supone que esta por default
+        */
+        String op_crear = "";
+        String dia, mes, año;
+        String r_fecha = "";
+        String r_materia = "", r_horario = "", r_dia = "";
+        String encontrado = null;
+        int edad = 0;
+        char tipo = 'N'; //¿se puede cambiar?
+        
+        File FileRegistroEstudiantes = new File ("registro.txt");
+        
+        //Obtención de la fecha mediante una biblioteca de Object
+        Calendar c1 = Calendar.getInstance();
+        dia = Integer.toString(c1.get(Calendar.DATE));
+        mes = Integer.toString(c1.get(Calendar.MONTH));
+        año = Integer.toString(c1.get(Calendar.YEAR));
+        r_fecha = dia+"/"+mes+"/"+año;
+        
+        /*
+        Mostrar las materias disponibles, dar a elegir, mostrar el horario, confirmar
+        registro. Validar el tipo de registro mediante la lectura del archivo estudiantes.txt
+        buscando el nombre completo del estudiante linea por linea para luego en la posicion 2
+        de la linea de un estudiante determinar el rango del tipo de matricula
+        */
+        while(op_crear != "S"){
+            int op_curso;
+  
+            System.out.println("/** REGISTROS **/\n");
+            Planificador.ImprimirMaterias(Planificador.listaMaterias()); //aplicando método para imprimir materias
+            System.out.print("Elija la materia para registrar: ");
+            op_curso=sc.nextInt();
+            
+            while((op_curso>9) || (op_curso<1)){ 
+                System.out.print("Elija la materia para registrar:  ");
+                op_curso=sc.nextInt(); 
+            }
+            
+            r_materia = lista_materias.get(op_curso - 1);
+            
+            try{
+                FileReader leer = new FileReader ("Cursos.txt");
+                BufferedReader br = new BufferedReader(leer);
+                String linea = br.readLine();
+
+                while(linea != null){
+                    String partes[]=linea.split(",");
+
+                    if (r_materia.equals(partes[0])){
+                       r_dia = partes[2];
+                       r_horario = partes[3];
+
+                       //¿lo dejamos aquí o lo operamos fuera de este while?
+                       if (r_materia.equals("Pociones") || r_materia.equals("Defensa contra las artes oscuras")
+                               || r_materia.equals("Adivinación")){
+
+                           try{
+                                FileReader leer2 = new FileReader ("Estudiantes");
+                                BufferedReader br2 = new BufferedReader(leer);
+                                String linea2 = br2.readLine();
+
+                                while(linea2 != null){
+                                String partes2[]=linea2.split(",");
+                                String p_edad = partes[2];
+
+                                    if (nombre.equals(partes2[0]) && apellido.equals(partes2[1])){
+                                        edad = Integer.parseInt(p_edad);
+                                        if(edad <= 15 ){
+                                            tipo = 'E'; 
+                                        }
+                                        linea2 = null; 
+
+                                    }else{
+                                        linea2 = br2.readLine();
+                                    }
+                                }
+                                leer2.close();
+                            }catch(IOException e){
+                                System.out.println("Error");
+                            }
+                       }
+                    linea = null;   
+                    }else{
+                       linea = br.readLine();
+                    }
+                }
+                leer.close();
+           
+            }catch(IOException e){
+                System.out.println("Error");
+            }
+        
+            System.out.println("El horario de "+r_materia+" es "+r_dia+", "+r_horario);
+            System.out.println("Desea registarse (S/N): ");
+            op_crear=sc.nextLine().toUpperCase();
+        }
+        
+        if ("S".equals(op_crear)){
+            String nuevo_alumno = r_fecha+","+nombre+","+apellido+","+r_materia+","+tipo;
+            
+            try{
+                FileWriter escribir3 = new FileWriter (FileRegistroEstudiantes);
+                BufferedWriter bw = new BufferedWriter(escribir3);
+                
+                bw.write(nuevo_alumno); //¿esta bien el de planificador?
+                System.out.println("Se ha registrado en la materia");
+                
+            }catch(IOException e){
+            System.out.println("Error");
+            }
+        }
+    } 
+    
+       //Lee el archivo de cursos planificados, presenta la informacion
+       //Se elige la opcion del curso al que se quiere registrar
+       //"S" si se quiere registrar o "N" si desea elegir otro curso
+       //Si "S" entonces se escribe en un archivo llamado "registro.txt", la informacion del estudiante se solicitara y se validara con el archivo "estudiantes.txt"
+       //La informacion a escribir sera la que el estudiante ingrese y adicional se anexara una "E" de extraordinario segun la validacion de edad
+       //para cursar la materia (Si es menor), si es mayor que la edad se anexara "N"
+    
+    public String DescripcionDeVuelo(String nombre, String apellido){
+        String mensaje="";
+        String mago = "";
+        
+        try{
+           FileReader leer4 = new FileReader ("Estudiantes.txt");
+           BufferedReader br4 = new BufferedReader(leer4);
+           String linea = br4.readLine();
+           
+           while(linea != null){
+               String partes[]=linea.split(",");
+               mago = partes[5];
+               
+               if ( nombre.equals(partes[0]) && apellido.equals(partes[1]) ){
+                   
+                   if (mago.equals("N")){
+                       mensaje = "Usted es un mago normal, para volar necesita una nimbus 2000.";
+                   }else if (mago.equals("A")){
+                       mensaje = "Usted es un animago, usted no necesita escoba para volar.";
+                   }else{
+                       mensaje = "Usted es un metamorfomago, usted no necesita escoba para volar";    
+                   }
+                   
+                   linea = null;
+               }else{
+                   linea = br4.readLine();
+               }
+            }
+           
+            leer4.close();
+           
+        }catch(IOException e){
+            System.out.println("Error");
+        }
+        return mensaje;
+    }
+    
+    //MUESTRA EL TIPO DE MAGO QUE ES CADA USUARIO
+    
+    @Override
+    public void Volar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void Despegar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+}
